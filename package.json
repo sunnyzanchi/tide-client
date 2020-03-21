@@ -1,0 +1,23 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "browserslist": "last 1 Firefox versions",
+  "scripts": {
+    "start": "parcel --open -p 3000 ./src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "parcel": "^1.12.4"
+  },
+  "dependencies": {
+    "ecsy": "^0.2.3",
+    "sockette": "^2.0.6"
+  }
+}
