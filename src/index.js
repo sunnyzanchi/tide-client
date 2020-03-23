@@ -19,12 +19,17 @@ loadSprites().then(() => {
       .addComponent(Components.Networked)
       .addComponent(Components.Position)
       .addComponent(Components.Static, { sprite: sprites.getSet('player').STANDING })
+
+    world
+      .createEntity('enemy-1')
+      .addComponent(Components.Position, { x: 100, y: 100 })
+      .addComponent(Components.Static, { sprite: sprites.getSet('golem').STANDING })
   })
 
 let lastTime = performance.now()
 
 const run = () => {
-  // Compute delta and elapsed time
+  // Compute delta and elapsed times
   const time = performance.now()
   const delta = time - lastTime
 

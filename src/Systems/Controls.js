@@ -10,23 +10,23 @@ const animation = {
 
 const upAnimation = () => ({
   ...animation,
-  frameIndices: sprites.getSet('player').WALKING_UP.frameIndices,
-  sprites: sprites.getSet('player').WALKING_UP.sprites
+  frameIndices: sprites.getSet('player').WALK_UP.frameIndices,
+  sprites: sprites.getSet('player').WALK_UP.sprites
 })
 const downAnimation = () => ({
   ...animation,
-  frameIndices: sprites.getSet('player').WALKING_DOWN.frameIndices,
-  sprites: sprites.getSet('player').WALKING_DOWN.sprites
+  frameIndices: sprites.getSet('player').WALK_DOWN.frameIndices,
+  sprites: sprites.getSet('player').WALK_DOWN.sprites
 })
 const leftAnimation = () => ({
   ...animation,
-  frameIndices: sprites.getSet('player').WALKING_LEFT.frameIndices,
-  sprites: sprites.getSet('player').WALKING_LEFT.sprites
+  frameIndices: sprites.getSet('player').WALK_LEFT.frameIndices,
+  sprites: sprites.getSet('player').WALK_LEFT.sprites
 })
 const rightAnimation = () => ({
   ...animation,
-  frameIndices: sprites.getSet('player').WALKING_RIGHT.frameIndices,
-  sprites: sprites.getSet('player').WALKING_RIGHT.sprites
+  frameIndices: sprites.getSet('player').WALK_RIGHT.frameIndices,
+  sprites: sprites.getSet('player').WALK_RIGHT.sprites
 })
 
 class Controls extends System {
