@@ -1,6 +1,5 @@
 export { default as Animated } from './Animated'
 export { default as Controllable } from './Controllable'
-export { default as Movable } from './Movable'
 export { default as Networked } from './Networked'
 export { default as Position } from './Position'
-export { default as Renderable } from './Renderable'
+export { default as Static } from './Static'

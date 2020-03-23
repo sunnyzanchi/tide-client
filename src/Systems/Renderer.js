@@ -1,69 +1,52 @@
 import { System } from 'ecsy'
-import { Animated, Movable, Position, Renderable } from '../Components'
+import { Animated, Movable, Position, Static } from '../Components'
 
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
 class Renderer extends System {
   static queries = {
-    renderable: {
-      components: [Position, Renderable]
+    // Entities that have an animation associated with them
+    animated: {
+      components: [Position, Animated]
+    },
+    // Entities that can be rendered as a static sprite
+    static: {
+      components: [Position, Static]
     }
   }
 
-  getAnimation(entity) {
-    const { direction } = entity.getComponent(Movable)
-    const animation = {
-      frame: 0,
-      name: null,
-      play: true,
+  renderAnimated = dt => entity => {
+    const { x, y } = entity.getComponent(Position)
+    const a = entity.getMutableComponent(Animated)
+
+    const frameIndex = a.frameIndices[a.frame]
+    const sprite = a.sprites[frameIndex]
+
+    a.dt += dt
+    if (a.dt > 1000 / a.fps) {
+      a.dt = 0
+      a.frame += 1
     }
 
-    if (direction === 'up') animation.name = 'WALKING_UP'
-    if (direction === 'down') animation.name = 'WALKING_DOWN'
-    if (direction === 'left') animation.name = 'WALKING_LEFT'
-    if (direction === 'right') animation.name = 'WALKING_RIGHT'
-    if (direction === 'none') {
-      animation.name ='WALKING_DOWN'
-      animation.play = false
+    if (a.frame > a.frameIndices.length - 1) {
+      a.frame = 0
     }
 
-    return animation
+    ctx.drawImage(sprite, x, y)
+  }
+
+  renderStatic = entity => {
+    const { x, y } = entity.getComponent(Position)
+    const { sprite } = entity.getComponent(Static)
+
+    ctx.drawImage(sprite, x, y)
   }
 
   execute(dt) {
     ctx.clearRect(0, 0, 600, 600)
-    this.queries.renderable.results.forEach(entity => {
-      const { x, y } = entity.getComponent(Position)
-      const r = entity.getComponent(Renderable)
-      const animated = entity.hasComponent(Animated)
-
-      let sprite;
-      
-      if (animated) {
-        const a = entity.getMutableComponent(Animated)
-        const { frame: staticFrame, name, play } = this.getAnimation(entity)
-
-        const frameIndex = play ? a.frame : staticFrame
-        const frame = a.sprites[name].frames[frameIndex]
-
-        sprite = a.sprites[name].sprites[frame]
-
-        a.dt += dt
-        if (a.dt > 1000 / a.fps) {
-          a.dt = 0
-          a.frame += 1
-        }
-
-        if (a.frame > a.sprites[name].frames.length - 1) {
-          a.frame = 0
-        }
-      } else {
-        sprite = r.sprite
-      }
-
-      ctx.drawImage(sprite, x, y)
-    })
+    this.queries.animated.results.forEach(this.renderAnimated(dt))
+    this.queries.static.results.forEach(this.renderStatic)
   }
 }
 

@@ -1,5 +1,33 @@
 import { System } from 'ecsy'
-import { Controllable, Movable, Position} from '../Components'
+import { Animated, Controllable, Position, Static } from '../Components'
+import { sprites } from '../sprites'
+
+const animation = {
+  fps: 5,
+  frameIndices: [0, 1, 0, 2],
+  sprites: []
+}
+
+const upAnimation = () => ({
+  ...animation,
+  frameIndices: sprites.player.WALKING_UP.frameIndices,
+  sprites: sprites.player.WALKING_UP.sprites
+})
+const downAnimation = () => ({
+  ...animation,
+  frameIndices: sprites.player.WALKING_DOWN.frameIndices,
+  sprites: sprites.player.WALKING_DOWN.sprites
+})
+const leftAnimation = () => ({
+  ...animation,
+  frameIndices: sprites.player.WALKING_LEFT.frameIndices,
+  sprites: sprites.player.WALKING_LEFT.sprites
+})
+const rightAnimation = () => ({
+  ...animation,
+  frameIndices: sprites.player.WALKING_RIGHT.frameIndices,
+  sprites: sprites.player.WALKING_RIGHT.sprites
+})
 
 class Controls extends System {
   static queries = {
@@ -12,7 +40,7 @@ class Controls extends System {
     DOWN: false,
     LEFT: false,
     RIGHT: false,
-    UP: false,
+    UP: false
   }
 
   keyDown = e => {
@@ -40,28 +68,47 @@ class Controls extends System {
 
   execute(dt) {
     this.queries.controllable.results.forEach(entity => {
-      const moving = entity.getMutableComponent(Movable)
       const position = entity.getMutableComponent(Position)
 
-      if (this.keys.DOWN) {
-        position.y += Math.floor(dt * 0.11)
-        moving.direction = 'down'
-      }
-      if (this.keys.LEFT) {
-        position.x -= Math.floor(dt * 0.11)
-        moving.direction = 'left'
-      }
-      if (this.keys.RIGHT) {
-        position.x += Math.floor(dt * 0.11)
-        moving.direction = 'right'
-      }
-      if (this.keys.UP) {
-        position.y -= Math.floor(dt * 0.11)
-        moving.direction = 'up'
+      if (Object.values(this.keys).every(val => !val)) {
+        entity.removeComponent(Animated)
+        entity.addComponent(Static, { sprite: sprites.player.STANDING })
+
+        return
       }
 
-      if (Object.values(this.keys).every(val => !val)) {
-        moving.direction = 'none'
+      entity.removeComponent(Static)
+
+      if (!entity.hasComponent(Animated)) {
+        entity.addComponent(Animated)
+      }
+
+      const a = entity.getMutableComponent(Animated)
+      a.fps = 5
+
+      if (this.keys.DOWN) {
+        const animation = downAnimation()
+        position.y += Math.floor(dt * 0.11)
+        a.frameIndices = animation.frameIndices
+        a.sprites = animation.sprites
+      }
+      if (this.keys.LEFT) {
+        const animation = leftAnimation()
+        position.x -= Math.floor(dt * 0.11)
+        a.frameIndices = animation.frameIndices
+        a.sprites = animation.sprites
+      }
+      if (this.keys.RIGHT) {
+        const animation = rightAnimation()
+        position.x += Math.floor(dt * 0.11)
+        a.frameIndices = animation.frameIndices
+        a.sprites = animation.sprites
+      }
+      if (this.keys.UP) {
+        const animation = upAnimation()
+        position.y -= Math.floor(dt * 0.11)
+        a.frameIndices = animation.frameIndices
+        a.sprites = animation.sprites
       }
     })
   }

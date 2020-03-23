@@ -14,7 +14,7 @@ class Network extends System {
       listen: {
         changed: true
       }
-    },
+    }
   }
 
   limiter = 0
@@ -32,7 +32,10 @@ class Network extends System {
   init() {
     const self = this
     const socket = new Sockette(ADDRESS, {
-      onopen: e => (self.socket = socket),
+      onopen: e => {
+        console.log('onopen')
+        self.socket = socket
+      },
       onmessage: this.handleMessage,
       onreconnect: e => (self.socket = socket),
       onmaximum: e => console.log('Stop Attempting!', e),
@@ -50,7 +53,7 @@ class Network extends System {
     this.queries.networked.results.forEach(entity => {
       const serialized = serialize(entity)
       serialized.timestamp = time
-      this.socket && this.socket.json(serialized)
+      this.socket && (console.log(this.socket) || this.socket.json(serialized))
     })
   }
 }

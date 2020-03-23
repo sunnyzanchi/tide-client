@@ -2,17 +2,19 @@ import { Component } from "ecsy";
 
 class Animated extends Component {
   dt = 0
-  frame = 0
   fps = 24
-  // Sprites go into a map like:
-  // {
-  //   WALKING_RIGHT: {
-  //     // frames is the order of indices to use for animations
-  //     frames: [0, 1, 2, 3],
-  //     sprites: [BitmapImage, ...],
-  //   }
-  // }
-  sprites = {}
+  frame = 0
+  // order of indices to use for animations
+  frameIndices = []
+  sprites = []
+
+  reset() {
+    this.dt = 0
+    this.fps = 24
+    this.frame = 0
+    this.frameIndices = []
+    this.sprites = []
+  }
 }
 
 export default Animated
