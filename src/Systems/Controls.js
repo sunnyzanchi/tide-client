@@ -10,23 +10,23 @@ const animation = {
 
 const upAnimation = () => ({
   ...animation,
-  frameIndices: sprites.player.WALKING_UP.frameIndices,
-  sprites: sprites.player.WALKING_UP.sprites
+  frameIndices: sprites.getSet('player').WALKING_UP.frameIndices,
+  sprites: sprites.getSet('player').WALKING_UP.sprites
 })
 const downAnimation = () => ({
   ...animation,
-  frameIndices: sprites.player.WALKING_DOWN.frameIndices,
-  sprites: sprites.player.WALKING_DOWN.sprites
+  frameIndices: sprites.getSet('player').WALKING_DOWN.frameIndices,
+  sprites: sprites.getSet('player').WALKING_DOWN.sprites
 })
 const leftAnimation = () => ({
   ...animation,
-  frameIndices: sprites.player.WALKING_LEFT.frameIndices,
-  sprites: sprites.player.WALKING_LEFT.sprites
+  frameIndices: sprites.getSet('player').WALKING_LEFT.frameIndices,
+  sprites: sprites.getSet('player').WALKING_LEFT.sprites
 })
 const rightAnimation = () => ({
   ...animation,
-  frameIndices: sprites.player.WALKING_RIGHT.frameIndices,
-  sprites: sprites.player.WALKING_RIGHT.sprites
+  frameIndices: sprites.getSet('player').WALKING_RIGHT.frameIndices,
+  sprites: sprites.getSet('player').WALKING_RIGHT.sprites
 })
 
 class Controls extends System {
@@ -72,7 +72,7 @@ class Controls extends System {
 
       if (Object.values(this.keys).every(val => !val)) {
         entity.removeComponent(Animated)
-        entity.addComponent(Static, { sprite: sprites.player.STANDING })
+        entity.addComponent(Static, { sprite: sprites.getSet('player').STANDING })
 
         return
       }

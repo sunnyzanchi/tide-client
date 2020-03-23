@@ -33,12 +33,24 @@ class Renderer extends System {
       a.frame = 0
     }
 
+    if (process.env.NODE_ENV === 'development') {
+      if (sprite == null) {
+        console.warn(`Got null sprite trying to draw ${entity.name} on frame ${frameIndex}`)
+      }
+    }
+
     ctx.drawImage(sprite, x, y)
   }
 
   renderStatic = entity => {
     const { x, y } = entity.getComponent(Position)
     const { sprite } = entity.getComponent(Static)
+
+    if (process.env.NODE_ENV === 'development') {
+      if (sprite == null) {
+        console.warn(`Got null sprite trying to draw ${entity.name}`)
+      }
+    }
 
     ctx.drawImage(sprite, x, y)
   }
