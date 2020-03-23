@@ -1,18 +1,19 @@
+import { Position } from '../../Components'
+
 const serializers = {
   Position: position  => ({ position: { x: position.x, y: position.y }})
 }
 
 const serialize = entity => {
-  const components = entity.getComponents()
-  const values = Object
-    .entries(components)
-    .filter(([name, value]) => typeof serializers[name] === 'function')
-    .map(([name, value]) => serializers[name](value))
-    .reduce((acc, item) => ({ ...acc, ...item }), {})
+  const position = entity.getComponent(Position)
   
-  values.id = entity.id
+  const result = {
+    position: position,
+    type: 'POSITION_UPDATE',
+    name: entity.name
+  }
 
-  return values
+  return result
 }
 
 export default serialize

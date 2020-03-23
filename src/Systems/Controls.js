@@ -1,5 +1,5 @@
 import { System } from 'ecsy'
-import { Controllable, Position } from '../Components'
+import { Controllable, Movable, Position} from '../Components'
 
 class Controls extends System {
   static queries = {
@@ -38,23 +38,31 @@ class Controls extends System {
     document.addEventListener('keyup', this.keyUp)
   }
 
-  execute() {
+  execute(dt) {
     this.queries.controllable.results.forEach(entity => {
+      const moving = entity.getMutableComponent(Movable)
       const position = entity.getMutableComponent(Position)
 
       if (this.keys.DOWN) {
-        position.y += 1
+        position.y += Math.floor(dt * 0.11)
+        moving.direction = 'down'
       }
       if (this.keys.LEFT) {
-        position.x -= 1
+        position.x -= Math.floor(dt * 0.11)
+        moving.direction = 'left'
       }
       if (this.keys.RIGHT) {
-        position.x += 1
+        position.x += Math.floor(dt * 0.11)
+        moving.direction = 'right'
       }
       if (this.keys.UP) {
-        position.y -= 1
+        position.y -= Math.floor(dt * 0.11)
+        moving.direction = 'up'
       }
 
+      if (Object.values(this.keys).every(val => !val)) {
+        moving.direction = 'none'
+      }
     })
   }
 }
