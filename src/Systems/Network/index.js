@@ -50,7 +50,7 @@ class Network extends System {
     this.limiter = 0
     this.queries.networked.results.forEach(entity => {
       const serialized = serialize(entity)
-      serialized.timestamp = time
+      serialized.timeMs = Math.floor(time)
       this.socket && this.socket.json(serialized)
     })
   }

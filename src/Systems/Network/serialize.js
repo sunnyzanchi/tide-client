@@ -8,7 +8,7 @@ const serialize = entity => {
   const position = entity.getComponent(Position)
   
   const result = {
-    position: position,
+    xy: [position.x, position.y],
     type: 'POSITION_UPDATE',
     name: entity.name
   }
