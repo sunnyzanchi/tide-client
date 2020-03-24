@@ -1,7 +1,7 @@
 import { System } from 'ecsy'
 import {
   Animated,
-  Controllable,
+  KeyControlled,
   MouseControlled,
   Position,
   Static,
@@ -37,8 +37,8 @@ const rightAnimation = () => ({
 
 class Controls extends System {
   static queries = {
-    controllable: {
-      components: [Controllable]
+    keyControlled: {
+      components: [KeyControlled]
     },
     mouseControlled: {
       components: [MouseControlled]
@@ -86,7 +86,7 @@ class Controls extends System {
     document.addEventListener('mousemove', this.mouseMove)
   }
 
-  handleKeyboardControlled = dt => entity => {
+  handleKeyControlled = dt => entity => {
     const position = entity.getMutableComponent(Position)
 
     if (Object.values(this.keys).every(val => !val)) {
@@ -141,7 +141,7 @@ class Controls extends System {
   }
 
   execute(dt) {
-    this.queries.controllable.results.forEach(this.handleKeyboardControlled(dt))
+    this.queries.keyControlled.results.forEach(this.handleKeyControlled(dt))
     this.queries.mouseControlled.results.forEach(this.handleMouseControlled(dt))
   }
 }

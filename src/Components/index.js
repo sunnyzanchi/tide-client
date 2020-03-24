@@ -1,5 +1,5 @@
 export { default as Animated } from './Animated'
-export { default as Controllable } from './Controllable'
+export { default as KeyControlled } from './KeyControlled'
 export { default as MouseControlled } from './MouseControlled'
 export { default as Networked } from './Networked'
 export { default as Position } from './Position'

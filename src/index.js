@@ -15,7 +15,7 @@ world
 loadSprites().then(() => {
     world
       .createEntity('player')
-      .addComponent(Components.Controllable)
+      .addComponent(Components.KeyControlled)
       .addComponent(Components.Networked)
       .addComponent(Components.Position)
       .addComponent(Components.Static, { sprite: sprites.getSet('player').STANDING })
