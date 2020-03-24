@@ -1,5 +1,7 @@
 import { createSprites, flipRow } from './utils'
+
 import crosshairimg from '../assets/crosshair.png'
+import bulletimg from '../assets/bullet.png'
 import goblinimgs from '../assets/goblin.png'
 import golemimgs from '../assets/golem.png'
 import playerimgs from '../assets/player.png'
@@ -35,6 +37,7 @@ class SpriteManager {
 
 export const sprites = new SpriteManager()
 
+const loadBullet = () => createSprites(bulletimg, 8, 8)
 const loadCrosshair = () => createSprites(crosshairimg, 15, 15)
 const loadGoblin = () => createSprites(goblinimgs, 64, 64)
 const loadGolem = () => createSprites(golemimgs, 64, 64)
@@ -49,75 +52,86 @@ const loadPlayer = () =>
   })
 
 export const loadSprites = () =>
-  Promise.all([loadCrosshair(), loadGoblin(), loadGolem(), loadPlayer()]).then(
-    ([cs, gs, gos, ps]) => {
-      const crosshair = {
-        DEFAULT: cs[0][0]
-      }
-
-      const goblin = {
-        STANDING: gs[0][0],
-        WALK_DOWN: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gs[0]
-        },
-        WALK_RIGHT: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gs[1]
-        },
-        WALK_UP: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gs[2]
-        },
-        WALK_LEFT: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gs[3]
-        }
-      }
-
-      const golem = {
-        STANDING: gos[2][0],
-        WALK_UP: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gos[0]
-        },
-        WALK_LEFT: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gos[1]
-        },
-        WALK_DOWN: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gos[2]
-        },
-        WALK_RIGHT: {
-          frameIndices: [0, 1, 2, 3, 4, 5, 6],
-          sprites: gos[3]
-        }
-      }
-
-      const player = {
-        STANDING: ps[0][0],
-        WALK_DOWN: {
-          frameIndices: [1, 1, 2, 2],
-          sprites: ps[0]
-        },
-        WALK_RIGHT: {
-          frameIndices: [0, 1, 0, 2],
-          sprites: ps[2]
-        },
-        WALK_UP: {
-          frameIndices: [1, 1, 2, 2],
-          sprites: ps[1]
-        },
-        WALK_LEFT: {
-          frameIndices: [0, 1, 0, 2],
-          sprites: ps[3]
-        }
-      }
-
-      sprites.addSet('crosshair', crosshair)
-      sprites.addSet('goblin', goblin)
-      sprites.addSet('golem', golem)
-      sprites.addSet('player', player)
+  Promise.all([
+    loadBullet(),
+    loadCrosshair(),
+    loadGoblin(),
+    loadGolem(),
+    loadPlayer()
+  ]).then(([bs, cs, gs, gos, ps]) => {
+    const bullet = {
+      DEFAULT: bs[0][0]
     }
-  )
+
+    const crosshair = {
+      DEFAULT: cs[0][0],
+      BLUE: cs[0][1],
+      RED: cs[0][2]
+    }
+
+    const goblin = {
+      STANDING: gs[0][0],
+      WALK_DOWN: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gs[0]
+      },
+      WALK_RIGHT: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gs[1]
+      },
+      WALK_UP: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gs[2]
+      },
+      WALK_LEFT: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gs[3]
+      }
+    }
+
+    const golem = {
+      STANDING: gos[2][0],
+      WALK_UP: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gos[0]
+      },
+      WALK_LEFT: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gos[1]
+      },
+      WALK_DOWN: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gos[2]
+      },
+      WALK_RIGHT: {
+        frameIndices: [0, 1, 2, 3, 4, 5, 6],
+        sprites: gos[3]
+      }
+    }
+
+    const player = {
+      STANDING: ps[0][0],
+      WALK_DOWN: {
+        frameIndices: [1, 1, 2, 2],
+        sprites: ps[0]
+      },
+      WALK_RIGHT: {
+        frameIndices: [0, 1, 0, 2],
+        sprites: ps[2]
+      },
+      WALK_UP: {
+        frameIndices: [1, 1, 2, 2],
+        sprites: ps[1]
+      },
+      WALK_LEFT: {
+        frameIndices: [0, 1, 0, 2],
+        sprites: ps[3]
+      }
+    }
+
+    sprites.addSet('bullet', bullet)
+    sprites.addSet('crosshair', crosshair)
+    sprites.addSet('goblin', goblin)
+    sprites.addSet('golem', golem)
+    sprites.addSet('player', player)
+  })

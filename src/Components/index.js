@@ -1,6 +1,8 @@
 export { default as Animated } from './Animated'
+export { default as FollowMouse } from './FollowMouse'
 export { default as KeyControlled } from './KeyControlled'
 export { default as MouseControlled } from './MouseControlled'
 export { default as Networked } from './Networked'
 export { default as Position } from './Position'
 export { default as Static } from './Static'
+export { default as Velocity } from './Velocity'

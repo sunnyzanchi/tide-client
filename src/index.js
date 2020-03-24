@@ -9,7 +9,8 @@ const world = new World()
 
 world
   .registerSystem(Systems.Controls)
-  .registerSystem(Systems.Network)
+  // .registerSystem(Systems.Network)
+  .registerSystem(Systems.Mover)
   .registerSystem(Systems.Renderer)
 
 loadSprites().then(() => {
@@ -17,6 +18,7 @@ loadSprites().then(() => {
       .createEntity('player')
       .addComponent(Components.KeyControlled)
       .addComponent(Components.Networked)
+      .addComponent(Components.MouseControlled)
       .addComponent(Components.Position)
       .addComponent(Components.Static, { sprite: sprites.getSet('player').STANDING })
 
@@ -28,7 +30,7 @@ loadSprites().then(() => {
     world.createEntity('crosshair')
     .addComponent(Components.Position)
     .addComponent(Components.Static, { centered: true, sprite: sprites.getSet('crosshair').DEFAULT })
-    .addComponent(Components.MouseControlled)
+    .addComponent(Components.FollowMouse)
   })
 
 let lastTime = performance.now()

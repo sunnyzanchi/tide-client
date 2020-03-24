@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "ecsy": "^0.2.3",
-    "sockette": "^2.0.6"
+    "sockette": "^2.0.6",
+    "victor": "^1.1.0"
   }
 }
