@@ -24,6 +24,11 @@ loadSprites().then(() => {
       .createEntity('enemy-1')
       .addComponent(Components.Position, { x: 100, y: 100 })
       .addComponent(Components.Static, { sprite: sprites.getSet('golem').STANDING })
+
+    world.createEntity('crosshair')
+    .addComponent(Components.Position)
+    .addComponent(Components.Static, { centered: true, sprite: sprites.getSet('crosshair').DEFAULT })
+    .addComponent(Components.MouseControlled)
   })
 
 let lastTime = performance.now()

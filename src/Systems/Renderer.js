@@ -43,13 +43,18 @@ class Renderer extends System {
   }
 
   renderStatic = entity => {
-    const { x, y } = entity.getComponent(Position)
-    const { sprite } = entity.getComponent(Static)
+    let { x, y } = entity.getComponent(Position)
+    const { centered, sprite } = entity.getComponent(Static)
 
     if (process.env.NODE_ENV === 'development') {
       if (sprite == null) {
         console.warn(`Got null sprite trying to draw ${entity.name}`)
       }
+    }
+
+    if (centered) {
+      x -= Math.floor(sprite.width / 2)
+      y -= Math.floor(sprite.height / 2)
     }
 
     ctx.drawImage(sprite, x, y)

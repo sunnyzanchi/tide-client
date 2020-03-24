@@ -1,4 +1,5 @@
 import { createSprites, flipRow } from './utils'
+import crosshairimg from '../assets/crosshair.png'
 import goblinimgs from '../assets/goblin.png'
 import golemimgs from '../assets/golem.png'
 import playerimgs from '../assets/player.png'
@@ -34,6 +35,7 @@ class SpriteManager {
 
 export const sprites = new SpriteManager()
 
+const loadCrosshair = () => createSprites(crosshairimg, 15, 15)
 const loadGoblin = () => createSprites(goblinimgs, 64, 64)
 const loadGolem = () => createSprites(golemimgs, 64, 64)
 
@@ -47,8 +49,12 @@ const loadPlayer = () =>
   })
 
 export const loadSprites = () =>
-  Promise.all([loadGoblin(), loadGolem(), loadPlayer()]).then(
-    ([gs, gos, ps]) => {
+  Promise.all([loadCrosshair(), loadGoblin(), loadGolem(), loadPlayer()]).then(
+    ([cs, gs, gos, ps]) => {
+      const crosshair = {
+        DEFAULT: cs[0][0]
+      }
+
       const goblin = {
         STANDING: gs[0][0],
         WALK_DOWN: {
@@ -109,6 +115,7 @@ export const loadSprites = () =>
         }
       }
 
+      sprites.addSet('crosshair', crosshair)
       sprites.addSet('goblin', goblin)
       sprites.addSet('golem', golem)
       sprites.addSet('player', player)

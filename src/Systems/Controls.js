@@ -1,5 +1,11 @@
 import { System } from 'ecsy'
-import { Animated, Controllable, Position, Static } from '../Components'
+import {
+  Animated,
+  Controllable,
+  MouseControlled,
+  Position,
+  Static,
+} from '../Components'
 import { sprites } from '../sprites'
 
 const animation = {
@@ -33,6 +39,9 @@ class Controls extends System {
   static queries = {
     controllable: {
       components: [Controllable]
+    },
+    mouseControlled: {
+      components: [MouseControlled]
     }
   }
 
@@ -41,6 +50,11 @@ class Controls extends System {
     LEFT: false,
     RIGHT: false,
     UP: false
+  }
+
+  mouse = {
+    x: 0,
+    y: 0
   }
 
   keyDown = e => {
@@ -61,56 +75,74 @@ class Controls extends System {
     if (key === 'd') this.keys.RIGHT = false
   }
 
+  mouseMove = e => {
+    this.mouse.x = e.clientX
+    this.mouse.y = e.clientY
+  }
+
   init() {
     document.addEventListener('keydown', this.keyDown)
     document.addEventListener('keyup', this.keyUp)
+    document.addEventListener('mousemove', this.mouseMove)
+  }
+
+  handleKeyboardControlled = dt => entity => {
+    const position = entity.getMutableComponent(Position)
+
+    if (Object.values(this.keys).every(val => !val)) {
+      entity.removeComponent(Animated)
+      entity.addComponent(Static, {
+        sprite: sprites.getSet('player').STANDING
+      })
+
+      return
+    }
+
+    entity.removeComponent(Static)
+
+    if (!entity.hasComponent(Animated)) {
+      entity.addComponent(Animated)
+    }
+
+    const a = entity.getMutableComponent(Animated)
+    a.fps = 5
+
+    if (this.keys.DOWN) {
+      const animation = downAnimation()
+      position.y += Math.floor(dt * 0.11)
+      a.frameIndices = animation.frameIndices
+      a.sprites = animation.sprites
+    }
+    if (this.keys.LEFT) {
+      const animation = leftAnimation()
+      position.x -= Math.floor(dt * 0.11)
+      a.frameIndices = animation.frameIndices
+      a.sprites = animation.sprites
+    }
+    if (this.keys.RIGHT) {
+      const animation = rightAnimation()
+      position.x += Math.floor(dt * 0.11)
+      a.frameIndices = animation.frameIndices
+      a.sprites = animation.sprites
+    }
+    if (this.keys.UP) {
+      const animation = upAnimation()
+      position.y -= Math.floor(dt * 0.11)
+      a.frameIndices = animation.frameIndices
+      a.sprites = animation.sprites
+    }
+  }
+
+  handleMouseControlled = dt => entity => {
+    const position = entity.getMutableComponent(Position)
+
+    position.x = this.mouse.x
+    position.y = this.mouse.y
   }
 
   execute(dt) {
-    this.queries.controllable.results.forEach(entity => {
-      const position = entity.getMutableComponent(Position)
-
-      if (Object.values(this.keys).every(val => !val)) {
-        entity.removeComponent(Animated)
-        entity.addComponent(Static, { sprite: sprites.getSet('player').STANDING })
-
-        return
-      }
-
-      entity.removeComponent(Static)
-
-      if (!entity.hasComponent(Animated)) {
-        entity.addComponent(Animated)
-      }
-
-      const a = entity.getMutableComponent(Animated)
-      a.fps = 5
-
-      if (this.keys.DOWN) {
-        const animation = downAnimation()
-        position.y += Math.floor(dt * 0.11)
-        a.frameIndices = animation.frameIndices
-        a.sprites = animation.sprites
-      }
-      if (this.keys.LEFT) {
-        const animation = leftAnimation()
-        position.x -= Math.floor(dt * 0.11)
-        a.frameIndices = animation.frameIndices
-        a.sprites = animation.sprites
-      }
-      if (this.keys.RIGHT) {
-        const animation = rightAnimation()
-        position.x += Math.floor(dt * 0.11)
-        a.frameIndices = animation.frameIndices
-        a.sprites = animation.sprites
-      }
-      if (this.keys.UP) {
-        const animation = upAnimation()
-        position.y -= Math.floor(dt * 0.11)
-        a.frameIndices = animation.frameIndices
-        a.sprites = animation.sprites
-      }
-    })
+    this.queries.controllable.results.forEach(this.handleKeyboardControlled(dt))
+    this.queries.mouseControlled.results.forEach(this.handleMouseControlled(dt))
   }
 }
 
