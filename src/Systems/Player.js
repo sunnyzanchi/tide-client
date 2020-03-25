@@ -5,10 +5,12 @@ import {
   Animated,
   KeyControlled,
   MouseControlled,
+  Networked,
   Player as PlayerComponent,
   Position,
+  Projectile,
   Static,
-  Velocity
+  Velocity,
 } from '../Components'
 import { sprites } from '../sprites'
 
@@ -120,6 +122,8 @@ class Player extends System {
       // Create bullet
       this.world
         .createEntity()
+        .addComponent(Networked)
+        .addComponent(Projectile)
         .addComponent(Position, pos)
         .addComponent(Velocity, vel)
         .addComponent(Static, { sprite: sprites.getSet('bullet').DEFAULT })
