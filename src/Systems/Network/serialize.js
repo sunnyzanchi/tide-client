@@ -5,8 +5,10 @@ const serialzeProjectile = entity => {
   const vel = entity.getComponent(Velocity)
  
   return {
-    bulletType: 1,
-    xy: [pos.x, pos.y],
+    projectileType: 'PROJECTILE0',
+    origin: {
+      xy: [pos.x, pos.y]
+    },
     vel: [vel.x, vel.y],
     type: 'PROJECTILE_CREATED'
   }
@@ -17,7 +19,9 @@ const serializePlayer = entity => {
  const vel = entity.getComponent(Velocity)
 
  return {
-   xy: [pos.x, pos.y],
+   origin: {
+     xy: [pos.x, pos.y],
+   },
    vel: [vel.x, vel.y],
    type: 'POSITION_UPDATE'
  }
