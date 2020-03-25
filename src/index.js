@@ -10,12 +10,13 @@ const world = new World()
 world
   .registerSystem(Systems.Controls)
   // .registerSystem(Systems.Network)
-  .registerSystem(Systems.Mover)
+  .registerSystem(Systems.Movement)
   .registerSystem(Systems.Renderer)
 
 loadSprites().then(() => {
     world
       .createEntity('player')
+      .addComponent(Components.Health, { max: 100, value: 100 })
       .addComponent(Components.KeyControlled)
       .addComponent(Components.Networked)
       .addComponent(Components.MouseControlled)
@@ -24,6 +25,7 @@ loadSprites().then(() => {
 
     world
       .createEntity('enemy-1')
+      .addComponent(Components.Health, { max: 100, value: 100 })
       .addComponent(Components.Position, { x: 100, y: 100 })
       .addComponent(Components.Static, { sprite: sprites.getSet('golem').STANDING })
 
