@@ -14,13 +14,12 @@ class Crosshair extends System {
   }
 
   execute() {
-    this.queries.crosshair.results.forEach(entity => {
-      const mc = entity.getComponent(MouseControlled)
-      const pos = entity.getMutableComponent(Position)
+    const crosshair = this.queries.crosshair.results[0]
+    const mc = crosshair.getComponent(MouseControlled)
+    const pos = crosshair.getMutableComponent(Position)
 
-      pos.x = mc.x
-      pos.y = mc.y
-    })
+    pos.x = mc.x
+    pos.y = mc.y    
   }
 }
 
