@@ -1,5 +1,6 @@
 export { default as Animated } from './Animated'
 export { default as FollowMouse } from './FollowMouse'
+export { default as Health } from './Health'
 export { default as KeyControlled } from './KeyControlled'
 export { default as MouseControlled } from './MouseControlled'
 export { default as Networked } from './Networked'

@@ -1,7 +1,7 @@
 import { System } from 'ecsy'
 import { Position, Velocity } from '../Components'
 
-class Mover extends System {
+class Movement extends System {
   static queries = {
     moving: {
       components: [Position, Velocity]
@@ -13,6 +13,8 @@ class Mover extends System {
       const { x: vx, y: vy } = entity.getComponent(Velocity)
       const p = entity.getMutableComponent(Position)
 
+      // TODO: Collision detection
+
       p.x += vx / dt
       p.y += vy / dt
     })
@@ -20,4 +22,4 @@ class Mover extends System {
   }
 }
 
-export default Mover
+export default Movement
