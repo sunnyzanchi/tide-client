@@ -97,9 +97,6 @@ class Controls extends System {
     this.mouse.LMB = true
   }
 
-  // TODO: Fix quick click problem
-  // If the player mousedowns then mousedups very quickly,
-  // this.mouse.LMB === false when the tick runs and the bullet doesnt shoot
   mouseUp = e => {
     this.mouse.LMB = false
   }
@@ -167,27 +164,29 @@ class Controls extends System {
   }
 
   handleMouseControlled = dt => entity => {
-    if (this.mouse.LMB) {
-      if (this.bulletLimiter === 0) {
-        const pos = entity.getComponent(Position)
-        const vel = new Vector(this.mouse.x - pos.x, this.mouse.y - pos.y)
-          .normalize()
-          .multiply(new Vector(64, 64))
-          .toObject()
-  
-        // Create bullet
-        this.world
-          .createEntity()
-          .addComponent(Position, pos)
-          .addComponent(Velocity, vel)
-          .addComponent(Static, { sprite: sprites.getSet('bullet').DEFAULT })
-      }
-      if (this.bulletLimiter < 200) {
-        this.bulletLimiter += dt
-        return
-      } else {
-        this.bulletLimiter = 0
-      }
+    if (this.mouse.LMB && this.bulletLimiter === 0) {
+      const pos = entity.getComponent(Position)
+      const vel = new Vector(this.mouse.x - pos.x, this.mouse.y - pos.y)
+        .normalize()
+        .multiply(new Vector(64, 64))
+        .toObject()
+
+      // Create bullet
+      this.world
+        .createEntity()
+        .addComponent(Position, pos)
+        .addComponent(Velocity, vel)
+        .addComponent(Static, { sprite: sprites.getSet('bullet').DEFAULT })
+      this.bulletLimiter += dt
+
+      return
+    }
+
+    if (this.bulletLimiter > 0 && this.bulletLimiter < 200) {
+      this.bulletLimiter += dt
+      return
+    } else {
+      this.bulletLimiter = 0
     }
   }
 
