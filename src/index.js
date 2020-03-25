@@ -23,8 +23,8 @@ const run = () => {
 
 world
   .registerSystem(Systems.Controls)
-  // .registerSystem(Systems.Network)
   .registerSystem(Systems.Player)
+  .registerSystem(Systems.Network)
   .registerSystem(Systems.Crosshair)
   .registerSystem(Systems.Movement)
   .registerSystem(Systems.Renderer)

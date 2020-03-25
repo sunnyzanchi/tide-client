@@ -2,15 +2,21 @@ import { System } from 'ecsy'
 import Sockette from 'sockette'
 
 import serialize from './serialize'
-import { Networked } from '../../Components'
+import { Networked, Player, Projectile } from '../../Components'
 
 const ADDRESS = 'ws://127.0.0.1:1234'
 // const ADDRESS = 'ws://demos.kaazing.com/echo'
 
 class Network extends System {
   static queries = {
-    networked: {
-      components: [Networked],
+    projectiles: {
+      components: [Networked, Projectile],
+      listen: {
+        added: true
+      }
+    },
+    player: {
+      components: [Networked, Player],
       listen: {
         changed: true
       }
@@ -35,24 +41,32 @@ class Network extends System {
       maxAttempts: 0,
       onopen: e => (self.socket = socket),
       onmessage: this.handleMessage,
-      onreconnect: e => (self.socket = socket),
+      onreconnect: e => {
+        if (e.type === 'close') return
+
+        self.socket = socket
+      },
       onmaximum: e => console.log('Stop Attempting!', e),
       onclose: e => (self.socket = null),
       onerror: e => (self.socket = null)
     })
   }
 
+  sendUpdate = time => entity => {
+    const serialized = serialize(entity)
+    serialized.timeMs = Math.floor(time)
+    this.socket && this.socket.json(serialized)
+  }
+
   execute(delta, time) {
     this.limiter += delta
 
-    if (this.limiter < 2000) return
+    this.queries.projectiles.added.forEach(this.sendUpdate(time))
+
+    if (this.limiter < 1000) return
 
     this.limiter = 0
-    this.queries.networked.results.forEach(entity => {
-      const serialized = serialize(entity)
-      serialized.timeMs = Math.floor(time)
-      this.socket && this.socket.json(serialized)
-    })
+    this.queries.player.results.forEach(this.sendUpdate(time))
   }
 }
 
