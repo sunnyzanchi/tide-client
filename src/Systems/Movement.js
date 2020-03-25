@@ -15,8 +15,8 @@ class Movement extends System {
 
       // TODO: Collision detection
 
-      p.x += vx / dt
-      p.y += vy / dt
+      p.x += Math.round(vx / dt)
+      p.y += Math.round(vy / dt)
     })
 
   }
