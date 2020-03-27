@@ -1,3 +1,5 @@
+export { default as Collision } from './Collision'
+export { default as CollisionResolution } from './CollisionResolution'
 export { default as Controls } from './Controls'
 export { default as Crosshair } from './Crosshair'
 export { default as Movement } from './Movement'

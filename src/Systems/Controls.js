@@ -1,5 +1,4 @@
 import { System } from 'ecsy'
-import Vector from 'victor'
 
 import {
   KeyControlled,

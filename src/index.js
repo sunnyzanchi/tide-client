@@ -27,23 +27,29 @@ world
   .registerSystem(Systems.Network)
   .registerSystem(Systems.Crosshair)
   .registerSystem(Systems.Movement)
+  .registerSystem(Systems.Collision)
+  .registerSystem(Systems.CollisionResolution)
   .registerSystem(Systems.Renderer)
 
 loadSprites().then(() => {
     world
-      .createEntity('player')
+    .createEntity('player')
+    .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 16, h: 32 })
       .addComponent(Components.Health, { max: 100, value: 100 })
       .addComponent(Components.Player)
       .addComponent(Components.KeyControlled)
+      .addComponent(Components.Mass, { value: 10 })
       .addComponent(Components.Networked)
       .addComponent(Components.MouseControlled)
-      .addComponent(Components.Position)
+      .addComponent(Components.Position, { x: 50, y: 50 })
       .addComponent(Components.Velocity)
       .addComponent(Components.Static, { sprite: sprites.getSet('player').STANDING })
 
     world
       .createEntity('enemy-1')
-      .addComponent(Components.Health, { max: 100, value: 100 })
+      .addComponent(Components.BoundingBox, { x: 10, y: 0, w: 45, h: 60 })
+      .addComponent(Components.Health, { max: 100, value: 11 })
+      .addComponent(Components.Mass, { value: 100 })
       .addComponent(Components.Position, { x: 100, y: 100 })
       .addComponent(Components.Static, { sprite: sprites.getSet('golem').STANDING })
 
@@ -52,6 +58,14 @@ loadSprites().then(() => {
     .addComponent(Components.Crosshair)
     .addComponent(Components.MouseControlled)
     .addComponent(Components.Static, { centered: true, sprite: sprites.getSet('crosshair').DEFAULT })
+
+    for (let i = 0; i < 20; i++) {
+      world.createEntity(`wall-${i}`)
+      .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 32, h: 16 })
+      .addComponent(Components.Mass, { value: 11 })
+      .addComponent(Components.Position, { x: i * 32, y: 0 })
+      .addComponent(Components.Static, { sprite: sprites.getSet('walls').TOP1, w: 32, h: 32 })
+    }
     
     run()
   })

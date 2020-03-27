@@ -5,6 +5,7 @@ import bulletimg from '../assets/bullet.png'
 import goblinimgs from '../assets/goblin.png'
 import golemimgs from '../assets/golem.png'
 import playerimgs from '../assets/player.png'
+import wallimgs from '../assets/walls.png'
 
 class SpriteManager {
   sprites = {}
@@ -41,6 +42,7 @@ const loadBullet = () => createSprites(bulletimg, 8, 8)
 const loadCrosshair = () => createSprites(crosshairimg, 15, 15)
 const loadGoblin = () => createSprites(goblinimgs, 64, 64)
 const loadGolem = () => createSprites(golemimgs, 64, 64)
+const loadWall = () => createSprites(wallimgs, 16, 16)
 
 const loadPlayer = () =>
   createSprites(playerimgs, 16, 32).then(rows => {
@@ -57,8 +59,9 @@ export const loadSprites = () =>
     loadCrosshair(),
     loadGoblin(),
     loadGolem(),
-    loadPlayer()
-  ]).then(([bs, cs, gs, gos, ps]) => {
+    loadPlayer(),
+    loadWall()
+  ]).then(([bs, cs, gs, gos, ps, ws]) => {
     const bullet = {
       DEFAULT: bs[0][0]
     }
@@ -129,9 +132,23 @@ export const loadSprites = () =>
       }
     }
 
+    const walls = {
+      TOP1: ws[0][0],
+      TOP2: ws[0][1],
+      TOP3: ws[1][0],
+      DOORWAY: ws[1][1],
+      DOOR: ws[2][0],
+      TOP_LEFT: ws[2][1],
+      TOP_RIGHT: ws[3][0],
+      LEFT: ws[3][1],
+      RIGHT: ws[4][0],
+      BOTTOM: ws[4][1],
+    }
+
     sprites.addSet('bullet', bullet)
     sprites.addSet('crosshair', crosshair)
     sprites.addSet('goblin', goblin)
     sprites.addSet('golem', golem)
     sprites.addSet('player', player)
+    sprites.addSet('walls', walls)
   })

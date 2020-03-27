@@ -1,24 +1,21 @@
-import { System } from 'ecsy'
-import { Position, Velocity } from '../Components'
+import { System, Not } from 'ecsy'
+import Vector from 'victor'
+import { BoundingBox, Colliding, Mass, Position, Velocity } from '../Components'
 
 class Movement extends System {
   static queries = {
     moving: {
-      components: [Position, Velocity]
+      components: [Position, Velocity, Not(Colliding)]
     }
   }
 
   execute(dt) {
     this.queries.moving.results.forEach(entity => {
-      const { x: vx, y: vy } = entity.getComponent(Velocity)
-      const p = entity.getMutableComponent(Position)
-
-      // TODO: Collision detection
-
-      p.x += Math.round(vx / dt)
-      p.y += Math.round(vy / dt)
+      const pos = entity.getMutableComponent(Position)
+      const vel = entity.getMutableComponent(Velocity)
+      pos.x += vel.x * (dt / 1000)
+      pos.y += vel.y * (dt / 1000)
     })
-
   }
 }
 
