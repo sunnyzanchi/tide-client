@@ -53,8 +53,7 @@ class Renderer extends System {
         )
       }
     }
-
-    ctx.drawImage(sprite, x, y)
+    ctx.drawImage(sprite, Math.round(x), Math.round(y))
   }
 
   renderStatic = entity => {
@@ -74,9 +73,9 @@ class Renderer extends System {
 
     // Image should be scaled to this width & height
     if (w && h) {
-      ctx.drawImage(sprite, x, y, w, h)
+      ctx.drawImage(sprite, Math.round(x), Math.round(y), w, h)
     } else {
-      ctx.drawImage(sprite, x, y)
+      ctx.drawImage(sprite, Math.round(x), Math.round(y))
     }
   }
 

@@ -3,6 +3,7 @@ import Vector from 'victor'
 
 import {
   Animated,
+  Bounce,
   BoundingBox,
   KeyControlled,
   MouseControlled,
@@ -15,7 +16,7 @@ import {
 } from '../Components'
 import { sprites } from '../sprites'
 
-const SPEED = 100
+const SPEED = 80
 
 class Player extends System {
   static queries = {
@@ -125,6 +126,7 @@ class Player extends System {
       // Create bullet
       this.world
         .createEntity()
+        .addComponent(Bounce)
         .addComponent(BoundingBox, { x: 0, y: 0, w: 8, h: 8 })
         .addComponent(Networked)
         .addComponent(Projectile)

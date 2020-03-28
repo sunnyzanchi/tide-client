@@ -1,4 +1,5 @@
 export { default as Animated } from './Animated'
+export { default as Bounce } from './Bounce'
 export { default as BoundingBox } from './BoundingBox'
 export { default as Colliding } from './Colliding'
 export { default as Crosshair } from './Crosshair'

@@ -26,9 +26,8 @@ world
   .registerSystem(Systems.Player)
   .registerSystem(Systems.Network)
   .registerSystem(Systems.Crosshair)
-  .registerSystem(Systems.Movement)
   .registerSystem(Systems.Collision)
-  .registerSystem(Systems.CollisionResolution)
+  .registerSystem(Systems.Movement)
   .registerSystem(Systems.Renderer)
 
 loadSprites().then(() => {
@@ -47,10 +46,10 @@ loadSprites().then(() => {
 
     world
       .createEntity('enemy-1')
-      .addComponent(Components.BoundingBox, { x: 10, y: 0, w: 45, h: 60 })
+      .addComponent(Components.BoundingBox, { x: 10, y: 10, w: 45, h: 48 })
       .addComponent(Components.Health, { max: 100, value: 11 })
       .addComponent(Components.Mass, { value: 100 })
-      .addComponent(Components.Position, { x: 100, y: 100 })
+      .addComponent(Components.Position, { x: 65, y: 45 })
       .addComponent(Components.Static, { sprite: sprites.getSet('golem').STANDING })
 
     world.createEntity('crosshair')
@@ -59,12 +58,25 @@ loadSprites().then(() => {
     .addComponent(Components.MouseControlled)
     .addComponent(Components.Static, { centered: true, sprite: sprites.getSet('crosshair').DEFAULT })
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 1; i < 20; i++) {
       world.createEntity(`wall-${i}`)
       .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 32, h: 16 })
       .addComponent(Components.Mass, { value: 11 })
       .addComponent(Components.Position, { x: i * 32, y: 0 })
       .addComponent(Components.Static, { sprite: sprites.getSet('walls').TOP1, w: 32, h: 32 })
+    }
+    world.createEntity('wall-tl')
+    .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 32, h: 16 })
+    .addComponent(Components.Mass, { value: 11 })
+    .addComponent(Components.Position, { x: 0, y: 0 })
+    .addComponent(Components.Static, { sprite: sprites.getSet('walls').TOP_LEFT, w: 32, h: 32 })
+
+    for (let i = 1; i < 20; i++) {
+      world.createEntity(`lwall-${i}`)
+      .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 10, h: 32 })
+      .addComponent(Components.Mass, { value: 11 })
+      .addComponent(Components.Position, { x: 0, y: i * 32 })
+      .addComponent(Components.Static, { sprite: sprites.getSet('walls').LEFT, w: 32, h: 32 })
     }
     
     run()
