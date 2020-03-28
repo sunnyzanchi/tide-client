@@ -22,7 +22,7 @@ class Movement extends System {
   }
 
   // Bounce off the intersecting face
-  bounceResponse = dt => entity => {
+  bounceResponse = (entity, dt) => {
     const colliding = entity.getComponent(Colliding)
     const pos = entity.getMutableComponent(Position)
     const vel = entity.getMutableComponent(Velocity)
@@ -47,7 +47,7 @@ class Movement extends System {
   }
 
   // Slide along the intersecting face
-  slideResponse = dt => entity => {
+  slideResponse = (entity, dt) => {
     const colliding = entity.getComponent(Colliding)
     const pos = entity.getMutableComponent(Position)
     const vel = entity.getMutableComponent(Velocity)
@@ -67,20 +67,20 @@ class Movement extends System {
   }
 
   execute(dt) {
-    this.queries.moving.results.forEach(entity => {
+    for (const entity of this.queries.moving.results) {
       const pos = entity.getMutableComponent(Position)
       const vel = entity.getComponent(Velocity)
       pos.x += vel.x * (dt / 1000)
       pos.y += vel.y * (dt / 1000)
-    })
+    }
 
-    this.queries.colliding.results.forEach(entity => {
+    for (const entity of this.queries.colliding.results) {
       if (entity.hasComponent(Bounce)) {
-        this.bounceResponse(dt)(entity)
+        this.bounceResponse(entity, dt)
       } else {
-        this.slideResponse(dt)(entity)
+        this.slideResponse(entity, dt)
       }
-    })
+    }
   }
 }
 

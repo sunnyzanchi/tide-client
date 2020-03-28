@@ -29,7 +29,7 @@ class Renderer extends System {
     }
   }
 
-  renderAnimated = dt => entity => {
+  renderAnimated = (entity, dt) => {
     const { x, y } = entity.getComponent(Position)
     const a = entity.getMutableComponent(Animated)
 
@@ -95,10 +95,17 @@ class Renderer extends System {
 
   execute(dt) {
     ctx.clearRect(0, 0, 600, 600)
-    this.queries.static.results.forEach(this.renderStatic)
-    this.queries.animated.results.forEach(this.renderAnimated(dt))
+    for (const entity of this.queries.static.results) {
+      this.renderStatic(entity)
+    }
 
-    this.queries.bb.results.forEach(this.renderBoundingBoxes)
+    for (const entity of this.queries.animated.results) {
+      this.renderAnimated(entity, dt)
+    }
+
+    for (const entity of this.queries.bb.results) {
+      this.renderBoundingBoxes(entity)
+    }
   }
 }
 
