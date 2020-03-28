@@ -79,7 +79,7 @@ const swept = (x1, y1, bb1, x2, y2, bb2, vel) => {
     yEntry = yInvEntry / vel.y
     yExit = yInvExit / vel.y
   }
-  
+
   if (yEntry > 1) {
     yEntry = Number.NEGATIVE_INFINITY
   }
@@ -90,16 +90,16 @@ const swept = (x1, y1, bb1, x2, y2, bb2, vel) => {
   const exitTime = Math.min(xExit, yExit)
 
   if (entryTime > exitTime) return noCollision
-  if (xEntry < 0 && yEntry < 0) return noCollision;
+  if (xEntry < 0 && yEntry < 0) return noCollision
   if (xEntry < 0) {
-      // Check that the bounding box started overlapped or not.
-      if (bb1x + bb1.w < bb2x || bb1x > bb2x + bb2.w) return noCollision;
+    // Check that the bounding box started overlapped or not.
+    if (bb1x + bb1.w < bb2x || bb1x > bb2x + bb2.w) return noCollision
   }
   if (yEntry < 0) {
-      // Check that the bounding box started overlapped or not.
-      if (bb1y + bb1.h < bb2y || bb1y > bb2y + bb2.h) return noCollision;
+    // Check that the bounding box started overlapped or not.
+    if (bb1y + bb1.h < bb2y || bb1y > bb2y + bb2.h) return noCollision
   }
-  
+
   let normalx
   let normaly
 
@@ -140,48 +140,47 @@ class Collision extends System {
     }
   }
 
-  execute(dt) {
-    this.queries.moving.results.forEach(entity => {
-      const bb1 = entity.getComponent(BoundingBox)
-      const pos1 = entity.getComponent(Position)
-      const vel = entity.getComponent(Velocity)
+  findCollisions = (entity, dt) => {
+    const bb1 = entity.getComponent(BoundingBox)
+    const pos1 = entity.getComponent(Position)
+    const vel = entity.getComponent(Velocity)
 
-      const collisions = []
+    const collisions = []
 
-      this.queries.colliders.results.forEach(other => {
-        // Can't collide against yourself
-        if (entity === other) return
-        if (
-          (entity.hasComponent(Player) && other.hasComponent(Projectile)) ||
-          (entity.hasComponent(Projectile) && other.hasComponent(Player))
-        )
-          return
+    for (let other of this.queries.colliders.results) {
+      // Can't collide against yourself
+      if (entity === other) continue
+      if (
+        (entity.hasComponent(Player) && other.hasComponent(Projectile)) ||
+        (entity.hasComponent(Projectile) && other.hasComponent(Player))
+      )
+        continue
 
-        const pos2 = other.getComponent(Position)
-        const bb2 = other.getComponent(BoundingBox)
+      const pos2 = other.getComponent(Position)
+      const bb2 = other.getComponent(BoundingBox)
 
-        const intersection = swept(
-          pos1.x,
-          pos1.y,
-          bb1,
-          pos2.x,
-          pos2.y,
-          bb2,
-          { x: vel.x * (dt / 1000), y: vel.y * (dt / 1000) }
-        )
-
-        // No collision
-        if (intersection.entryTime === 1) return
-
-        collisions.push({ entity: other, intersection })
+      const intersection = swept(pos1.x, pos1.y, bb1, pos2.x, pos2.y, bb2, {
+        x: vel.x * (dt / 1000),
+        y: vel.y * (dt / 1000)
       })
 
-      if (collisions.length > 0) {
-        entity.addComponent(Colliding, { with: collisions })
-      } else {
-        entity.removeComponent(Colliding)
-      }
-    })
+      // No collision
+      if (intersection.entryTime === 1) continue
+
+      collisions.push({ entity: other, intersection })
+    }
+
+    if (collisions.length > 0) {
+      entity.addComponent(Colliding, { with: collisions })
+    } else {
+      entity.removeComponent(Colliding)
+    }
+  }
+
+  execute(dt) {
+    for (const entity of this.queries.moving.results) {
+      this.findCollisions(entity, dt)
+    }
   }
 }
 
