@@ -1,11 +1,11 @@
 import { createSprites, flipRow } from './utils'
 
-import crosshairimg from '../assets/crosshair.png'
-import bulletimg from '../assets/bullet.png'
-import goblinimgs from '../assets/goblin.png'
-import golemimgs from '../assets/golem.png'
-import playerimgs from '../assets/player.png'
-import wallimgs from '../assets/walls.png'
+import crosshairimg from '../assets/img/crosshair.png'
+import bulletimg from '../assets/img/bullet.png'
+import goblinimgs from '../assets/img/goblin.png'
+import golemimgs from '../assets/img/golem.png'
+import playerimgs from '../assets/img/player.png'
+import wallimgs from '../assets/img/walls.png'
 
 class SpriteManager {
   sprites = {}
