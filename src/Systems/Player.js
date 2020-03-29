@@ -132,7 +132,6 @@ class Player extends System {
       // Create bullet
       this.world
         .createEntity()
-        .addComponent(Bounce)
         .addComponent(BoundingBox, BULLET_BB)
         .addComponent(Networked)
         .addComponent(Projectile)
