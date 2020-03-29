@@ -8,6 +8,10 @@ class Animated extends Component {
   frameIndices = []
   sprites = []
 
+  get frameIndex() {
+    return this.frameIndices[this.frame]
+  }
+
   reset() {
     this.dt = 0
     this.fps = 24

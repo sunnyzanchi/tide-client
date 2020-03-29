@@ -3,6 +3,7 @@ import {
   Animated,
   BoundingBox,
   Colliding,
+  Health,
   Movable,
   Position,
   Static
@@ -13,6 +14,17 @@ const ctx = canvas.getContext('2d')
 ctx.imageSmoothingEnabled = false
 ctx.strokeStyle = 'limegreen'
 ctx.lineWidth = '1px'
+
+const getCurrentSprite = entity => {
+  if (entity.hasComponent(Animated)) {
+    const a = entity.getComponent(Animated)
+    return a.sprites[a.frameIndex]
+  }
+
+  if (entity.hasComponent(Static)) {
+    return entity.getComponent(Static).sprite
+  }
+}
 
 class Renderer extends System {
   static queries = {
@@ -26,15 +38,17 @@ class Renderer extends System {
     },
     bb: {
       components: [Position, BoundingBox]
+    },
+    health: {
+      components: [Health]
     }
   }
 
-  renderAnimated = (entity, dt) => {
+  renderAnimated(entity, dt) {
     const { x, y } = entity.getComponent(Position)
     const a = entity.getMutableComponent(Animated)
 
-    const frameIndex = a.frameIndices[a.frame]
-    const sprite = a.sprites[frameIndex]
+    const sprite = a.sprites[a.frameIndex]
 
     a.dt += dt
     if (a.dt > 1000 / a.fps) {
@@ -56,7 +70,7 @@ class Renderer extends System {
     ctx.drawImage(sprite, Math.round(x), Math.round(y))
   }
 
-  renderStatic = entity => {
+  renderStatic(entity) {
     let { x, y } = entity.getComponent(Position)
     const { centered, sprite, w, h } = entity.getComponent(Static)
 
@@ -79,7 +93,7 @@ class Renderer extends System {
     }
   }
 
-  renderBoundingBoxes = entity => {
+  renderBoundingBox(entity) {
     const pos = entity.getComponent(Position)
     const bb = entity.getComponent(BoundingBox)
     const colliding = entity.hasComponent(Colliding)
@@ -93,6 +107,22 @@ class Renderer extends System {
     ctx.stroke()
   }
 
+  renderHealthBar(entity) {
+    const { x, y } = entity.getComponent(Position)
+    const { max, value } = entity.getComponent(Health)
+    const sprite = getCurrentSprite(entity)
+    const width = sprite.width
+    const perc = value / max
+
+    ctx.beginPath()
+    ctx.fillStyle = 'red'
+    ctx.fillRect(x, y - 10, width, 3)
+
+    ctx.beginPath()
+    ctx.fillStyle = 'limegreen'
+    ctx.fillRect(x, y - 10, width * perc, 3)
+  }
+
   execute(dt) {
     ctx.clearRect(0, 0, 600, 600)
     for (const entity of this.queries.static.results) {
@@ -104,7 +134,11 @@ class Renderer extends System {
     }
 
     for (const entity of this.queries.bb.results) {
-      this.renderBoundingBoxes(entity)
+      this.renderBoundingBox(entity)
+    }
+
+    for (const entity of this.queries.health.results) {
+      this.renderHealthBar(entity)
     }
   }
 }

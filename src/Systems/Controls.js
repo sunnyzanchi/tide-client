@@ -60,13 +60,13 @@ class Controls extends System {
     document.addEventListener('mouseup', this.mouseUp)
   }
 
-  updateKeys = entity => {
+  updateKeys(entity) {
     const kc = entity.getMutableComponent(KeyControlled)
     // Not sure if we need to copy this.keys into a new set yet
     kc.keys = this.keys
   }
 
-  updateMouse = entity => {
+  updateMouse(entity) {
     const mc = entity.getMutableComponent(MouseControlled)
 
     mc.x = this.mouse.x
