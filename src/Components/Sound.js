@@ -5,8 +5,8 @@ class Sound extends Component {
   loop = false
 
   reset() {
-    audio = null
-    loop = false
+    this.audio = null
+    this.loop = false
   }
 }
 
