@@ -146,6 +146,16 @@ class Collision extends System {
     x: 0,
     y: 0
   }
+
+  /**
+   * Use swept collision detection to detect collision between one moving
+   * and one static entity.
+   * When it finds a collision/collisions, it adds the Collding component
+   * to that entity.
+   * The `with` property is a list of entities it's colliding with.
+   * @param {Entity} entity
+   * @param {Number} dt
+   */
   findCollisions = (entity, dt) => {
     const bb1 = entity.getComponent(BoundingBox)
     const pos1 = entity.getComponent(Position)

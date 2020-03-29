@@ -3,6 +3,7 @@ import Vector from 'victor'
 
 import {
   Animated,
+  Attack,
   Bounce,
   BoundingBox,
   KeyControlled,
@@ -16,6 +17,7 @@ import {
 } from '../Components'
 import { sprites } from '../sprites'
 
+const BULLET_ATTACK = { hp: 5 }
 const BULLET_BB = { x: 0, y: 0, w: 8, h: 8 }
 const SPEED = 80
 
@@ -68,7 +70,7 @@ class Player extends System {
     }
   }
 
-  handleKeys = (keys, pos, vel, dt, player) => {
+  handleKeys(keys, pos, vel, dt, player) {
     if (keys.keys.size === 0) {
       this.stopMoving(player, vel)
       return
@@ -122,7 +124,7 @@ class Player extends System {
     }
   }
 
-  handleMouse = (mouse, pos, vel, dt) => {
+  handleMouse(mouse, pos, vel, dt) {
     if (mouse.LMB && this.bulletLimiter === 0) {
       const vel = new Vector(mouse.x - pos.x, mouse.y - pos.y)
         .normalize()
@@ -132,7 +134,7 @@ class Player extends System {
       // Create bullet
       this.world
         .createEntity()
-        .addComponent(Bounce)
+        .addComponent(Attack, BULLET_ATTACK)
         .addComponent(BoundingBox, BULLET_BB)
         .addComponent(Networked)
         .addComponent(Projectile)

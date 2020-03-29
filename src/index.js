@@ -21,7 +21,7 @@ const run = () => {
   requestAnimationFrame(run)
 }
 
-loadSprites().then(() => {  
+loadSprites().then(() => {
   world
     .registerSystem(Systems.Controls)
     .registerSystem(Systems.Player)
@@ -29,18 +29,20 @@ loadSprites().then(() => {
     .registerSystem(Systems.Crosshair)
     .registerSystem(Systems.Collision)
     .registerSystem(Systems.Movement)
+    .registerSystem(Systems.Combat)
     .registerSystem(Systems.Renderer)
 
   world
     .createEntity('player')
     .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 16, h: 32 })
     .addComponent(Components.Health, { max: 100, value: 100 })
-    .addComponent(Components.Player)
     .addComponent(Components.KeyControlled)
     .addComponent(Components.Mass, { value: 10 })
-    .addComponent(Components.Networked)
     .addComponent(Components.MouseControlled)
+    .addComponent(Components.Networked)
+    .addComponent(Components.Player)
     .addComponent(Components.Position, { x: 50, y: 50 })
+    .addComponent(Components.Slide)
     .addComponent(Components.Velocity)
     .addComponent(Components.Static, {
       sprite: sprites.getSet('player').STANDING
@@ -49,7 +51,7 @@ loadSprites().then(() => {
   world
     .createEntity('enemy-1')
     .addComponent(Components.BoundingBox, { x: 10, y: 10, w: 45, h: 48 })
-    .addComponent(Components.Health, { max: 100, value: 11 })
+    .addComponent(Components.Health, { max: 100, value: 50 })
     .addComponent(Components.Mass, { value: 100 })
     .addComponent(Components.Position, { x: 65, y: 45 })
     .addComponent(Components.Static, {
