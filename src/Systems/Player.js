@@ -3,6 +3,7 @@ import Vector from 'victor'
 
 import {
   Animated,
+  Attack,
   Bounce,
   BoundingBox,
   KeyControlled,
@@ -16,6 +17,7 @@ import {
 } from '../Components'
 import { sprites } from '../sprites'
 
+const BULLET_ATTACK = { hp: 5 }
 const BULLET_BB = { x: 0, y: 0, w: 8, h: 8 }
 const SPEED = 80
 
@@ -132,6 +134,7 @@ class Player extends System {
       // Create bullet
       this.world
         .createEntity()
+        .addComponent(Attack, BULLET_ATTACK)
         .addComponent(BoundingBox, BULLET_BB)
         .addComponent(Networked)
         .addComponent(Projectile)

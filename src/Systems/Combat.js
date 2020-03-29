@@ -1,5 +1,5 @@
 import { System } from 'ecsy'
-import { Colliding, Damage, Health, Projectile } from '../Components'
+import { Attack, Colliding, Damage, Health, Projectile } from '../Components'
 
 class Combat extends System {
   static queries = {
@@ -17,14 +17,18 @@ class Combat extends System {
       return
     }
     const { hp } = entity.getComponent(Damage)
+    const health = entity.getMutableComponent(Health)
+
+    health.value -= hp
+    entity.removeComponent(Damage)
   }
 
   handleProjectiles(entity) {
     const attack = entity.getComponent(Attack)
     const colliding = entity.getComponent(Colliding)
 
-    for (const other of colliding.with) {
-      other.addComponent(Damage, attack)
+    for (const collision of colliding.with) {
+      collision.entity.addComponent(Damage, attack)
     }
 
     entity.remove()
