@@ -27,6 +27,10 @@ class Combat extends System {
     const attack = entity.getComponent(Attack)
     const colliding = entity.getComponent(Colliding)
 
+    // If the projectile is somewhat far away from the collision,
+    // we'll skip over it and handle it next tick
+    if (colliding.entryTime > 0.2) return
+
     for (const collision of colliding.with) {
       collision.entity.addComponent(Damage, attack)
     }
