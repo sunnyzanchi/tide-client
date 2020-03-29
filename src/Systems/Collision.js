@@ -140,6 +140,12 @@ class Collision extends System {
     }
   }
 
+  // Potential performance hack:
+  // reuse this object rather than creating a new one inside this function
+  adjustedVel = {
+    x: 0,
+    y: 0
+  }
   findCollisions = (entity, dt) => {
     const bb1 = entity.getComponent(BoundingBox)
     const pos1 = entity.getComponent(Position)
@@ -159,10 +165,9 @@ class Collision extends System {
       const pos2 = other.getComponent(Position)
       const bb2 = other.getComponent(BoundingBox)
 
-      const intersection = swept(pos1.x, pos1.y, bb1, pos2.x, pos2.y, bb2, {
-        x: vel.x * (dt / 1000),
-        y: vel.y * (dt / 1000)
-      })
+      this.adjustedVel.x = vel.x * (dt/ 1000)
+      this.adjustedVel.y = vel.y * (dt/ 1000)
+      const intersection = swept(pos1.x, pos1.y, bb1, pos2.x, pos2.y, bb2, this.adjustedVel)
 
       // No collision
       if (intersection.entryTime === 1) continue

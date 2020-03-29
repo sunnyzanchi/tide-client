@@ -16,6 +16,7 @@ import {
 } from '../Components'
 import { sprites } from '../sprites'
 
+const BULLET_BB = { x: 0, y: 0, w: 8, h: 8 }
 const SPEED = 80
 
 class Player extends System {
@@ -27,6 +28,11 @@ class Player extends System {
 
   // TODO: Make this data-driven so different attacks can have different limits etc
   bulletLimiter = 0
+
+  init() {
+    // Have to do this in init since sprites are loaded async
+    this.BULLET_SPRITE = { sprite: sprites.getSet('bullet').DEFAULT }
+  }
 
   getAnimation(keys) {
     const animation = {
@@ -127,12 +133,12 @@ class Player extends System {
       this.world
         .createEntity()
         .addComponent(Bounce)
-        .addComponent(BoundingBox, { x: 0, y: 0, w: 8, h: 8 })
+        .addComponent(BoundingBox, BULLET_BB)
         .addComponent(Networked)
         .addComponent(Projectile)
         .addComponent(Position, pos)
         .addComponent(Velocity, vel)
-        .addComponent(Static, { sprite: sprites.getSet('bullet').DEFAULT })
+        .addComponent(Static, this.BULLET_SPRITE)
       this.bulletLimiter += dt
 
       return
