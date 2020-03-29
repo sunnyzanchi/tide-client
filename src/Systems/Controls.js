@@ -1,5 +1,4 @@
 import { System } from 'ecsy'
-import Vector from 'victor'
 
 import {
   KeyControlled,
@@ -82,8 +81,13 @@ class Controls extends System {
   }
 
   execute(dt) {
-    this.queries.keyControlled.results.forEach(this.updateKeys)
-    this.queries.mouseControlled.results.forEach(this.updateMouse)
+    for (const entity of this.queries.keyControlled.results) {
+      this.updateKeys(entity)
+    }
+
+    for (const entity of this.queries.mouseControlled.results) {
+      this.updateMouse(entity)
+    }
   }
 }
 

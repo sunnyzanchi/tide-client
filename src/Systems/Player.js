@@ -3,6 +3,8 @@ import Vector from 'victor'
 
 import {
   Animated,
+  Bounce,
+  BoundingBox,
   KeyControlled,
   MouseControlled,
   Networked,
@@ -14,6 +16,9 @@ import {
 } from '../Components'
 import { sprites } from '../sprites'
 
+const BULLET_BB = { x: 0, y: 0, w: 8, h: 8 }
+const SPEED = 80
+
 class Player extends System {
   static queries = {
     player: {
@@ -23,6 +28,11 @@ class Player extends System {
 
   // TODO: Make this data-driven so different attacks can have different limits etc
   bulletLimiter = 0
+
+  init() {
+    // Have to do this in init since sprites are loaded async
+    this.BULLET_SPRITE = { sprite: sprites.getSet('bullet').DEFAULT }
+  }
 
   getAnimation(keys) {
     const animation = {
@@ -70,19 +80,19 @@ class Player extends System {
     const right = keys.keys.has('d')
 
     if (left) {
-      vel.x = -10
+      vel.x = -SPEED
     }
 
     if (down) {
-      vel.y = 10
+      vel.y = SPEED
     }
 
     if (up) {
-      vel.y = -10
+      vel.y = -SPEED
     }
 
     if (right) {
-      vel.x = 10
+      vel.x = SPEED
     }
 
     if (!left && !right) {
@@ -116,17 +126,19 @@ class Player extends System {
     if (mouse.LMB && this.bulletLimiter === 0) {
       const vel = new Vector(mouse.x - pos.x, mouse.y - pos.y)
         .normalize()
-        .multiply(new Vector(64, 64))
+        .multiplyScalar(128)
         .toObject()
 
       // Create bullet
       this.world
         .createEntity()
+        .addComponent(Bounce)
+        .addComponent(BoundingBox, BULLET_BB)
         .addComponent(Networked)
         .addComponent(Projectile)
         .addComponent(Position, pos)
         .addComponent(Velocity, vel)
-        .addComponent(Static, { sprite: sprites.getSet('bullet').DEFAULT })
+        .addComponent(Static, this.BULLET_SPRITE)
       this.bulletLimiter += dt
 
       return

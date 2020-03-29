@@ -1,8 +1,18 @@
 import { System } from 'ecsy'
-import { Animated, Movable, Position, Static } from '../Components'
+import {
+  Animated,
+  BoundingBox,
+  Colliding,
+  Movable,
+  Position,
+  Static
+} from '../Components'
 
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
+ctx.imageSmoothingEnabled = false
+ctx.strokeStyle = 'limegreen'
+ctx.lineWidth = '1px'
 
 class Renderer extends System {
   static queries = {
@@ -13,10 +23,13 @@ class Renderer extends System {
     // Entities that can be rendered as a static sprite
     static: {
       components: [Position, Static]
+    },
+    bb: {
+      components: [Position, BoundingBox]
     }
   }
 
-  renderAnimated = dt => entity => {
+  renderAnimated = (entity, dt) => {
     const { x, y } = entity.getComponent(Position)
     const a = entity.getMutableComponent(Animated)
 
@@ -35,16 +48,17 @@ class Renderer extends System {
 
     if (process.env.NODE_ENV === 'development') {
       if (sprite == null) {
-        console.warn(`Got null sprite trying to draw ${entity.name} on frame ${frameIndex}`)
+        console.warn(
+          `Got null sprite trying to draw ${entity.name} on frame ${frameIndex}`
+        )
       }
     }
-
-    ctx.drawImage(sprite, x, y)
+    ctx.drawImage(sprite, Math.round(x), Math.round(y))
   }
 
   renderStatic = entity => {
     let { x, y } = entity.getComponent(Position)
-    const { centered, sprite } = entity.getComponent(Static)
+    const { centered, sprite, w, h } = entity.getComponent(Static)
 
     if (process.env.NODE_ENV === 'development') {
       if (sprite == null) {
@@ -57,13 +71,41 @@ class Renderer extends System {
       y -= Math.floor(sprite.height / 2)
     }
 
-    ctx.drawImage(sprite, x, y)
+    // Image should be scaled to this width & height
+    if (w && h) {
+      ctx.drawImage(sprite, Math.round(x), Math.round(y), w, h)
+    } else {
+      ctx.drawImage(sprite, Math.round(x), Math.round(y))
+    }
+  }
+
+  renderBoundingBoxes = entity => {
+    const pos = entity.getComponent(Position)
+    const bb = entity.getComponent(BoundingBox)
+    const colliding = entity.hasComponent(Colliding)
+    if (colliding) {
+      ctx.strokeStyle = 'red'
+    } else {
+      ctx.strokeStyle = 'green'
+    }
+    ctx.beginPath()
+    ctx.rect(pos.x + bb.x, pos.y + bb.y, bb.w, bb.h)
+    ctx.stroke()
   }
 
   execute(dt) {
     ctx.clearRect(0, 0, 600, 600)
-    this.queries.animated.results.forEach(this.renderAnimated(dt))
-    this.queries.static.results.forEach(this.renderStatic)
+    for (const entity of this.queries.static.results) {
+      this.renderStatic(entity)
+    }
+
+    for (const entity of this.queries.animated.results) {
+      this.renderAnimated(entity, dt)
+    }
+
+    for (const entity of this.queries.bb.results) {
+      this.renderBoundingBoxes(entity)
+    }
   }
 }
 

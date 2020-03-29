@@ -1,6 +1,6 @@
-import { Component } from "ecsy";
+import { TagComponent } from "ecsy";
 
-class Player extends Component {
+class Player extends TagComponent {
 
 }
 

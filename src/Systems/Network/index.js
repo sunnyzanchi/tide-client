@@ -52,7 +52,7 @@ class Network extends System {
     })
   }
 
-  sendUpdate = time => entity => {
+  sendUpdate = (entity, time) => {
     const serialized = serialize(entity)
     serialized.origin.timeMs = Math.floor(time)
     this.socket && this.socket.json(serialized)
@@ -61,12 +61,16 @@ class Network extends System {
   execute(delta, time) {
     this.limiter += delta
 
-    this.queries.projectiles.added.forEach(this.sendUpdate(time))
+    for (let entity of this.queries.projectiles.added) {
+      this.sendUpdate(entity, time)
+    }
 
     if (this.limiter < 1000) return
 
     this.limiter = 0
-    this.queries.player.results.forEach(this.sendUpdate(time))
+    for (let entity of this.queries.player.results) {
+      this.sendUpdate(entity, time)
+    }
   }
 }
 
