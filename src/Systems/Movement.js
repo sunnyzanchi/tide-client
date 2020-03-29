@@ -11,8 +11,6 @@ import {
   Velocity
 } from '../Components'
 
-const lerp = (v0, v1, t) => v0 * (1 - t) + v1 * t
-
 class Movement extends System {
   static queries = {
     colliding: {

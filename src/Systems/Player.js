@@ -70,7 +70,7 @@ class Player extends System {
     }
   }
 
-  handleKeys = (keys, pos, vel, dt, player) => {
+  handleKeys(keys, pos, vel, dt, player) {
     if (keys.keys.size === 0) {
       this.stopMoving(player, vel)
       return
@@ -124,7 +124,7 @@ class Player extends System {
     }
   }
 
-  handleMouse = (mouse, pos, vel, dt) => {
+  handleMouse(mouse, pos, vel, dt) {
     if (mouse.LMB && this.bulletLimiter === 0) {
       const vel = new Vector(mouse.x - pos.x, mouse.y - pos.y)
         .normalize()

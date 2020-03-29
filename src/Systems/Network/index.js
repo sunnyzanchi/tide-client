@@ -52,7 +52,7 @@ class Network extends System {
     })
   }
 
-  sendUpdate = (entity, time) => {
+  sendUpdate(entity, time) {
     const serialized = serialize(entity)
     serialized.origin.timeMs = Math.floor(time)
     this.socket && this.socket.json(serialized)
