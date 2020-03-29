@@ -4,6 +4,7 @@ import crosshairimg from '../assets/img/crosshair.png'
 import bulletimg from '../assets/img/bullet.png'
 import goblinimgs from '../assets/img/goblin.png'
 import golemimgs from '../assets/img/golem.png'
+import itemimgs from '../assets/img/items.png'
 import playerimgs from '../assets/img/player.png'
 import wallimgs from '../assets/img/walls.png'
 
@@ -42,6 +43,7 @@ const loadBullet = () => createSprites(bulletimg, 8, 8)
 const loadCrosshair = () => createSprites(crosshairimg, 15, 15)
 const loadGoblin = () => createSprites(goblinimgs, 64, 64)
 const loadGolem = () => createSprites(golemimgs, 64, 64)
+const loadItems = () => createSprites(itemimgs, 14, 18)
 const loadWall = () => createSprites(wallimgs, 16, 16)
 
 const loadPlayer = () =>
@@ -59,17 +61,18 @@ export const loadSprites = () =>
     loadCrosshair(),
     loadGoblin(),
     loadGolem(),
+    loadItems(),
     loadPlayer(),
     loadWall()
-  ]).then(([bs, cs, gs, gos, ps, ws]) => {
+  ]).then(([bs, cs, gs, gos, is, ps, ws]) => {
     const bullet = {
-      DEFAULT: bs[0][0]
+      DEFAULT: bs[0][0],
+      BLUE: cs[0][1],
+      RED: cs[0][2],
     }
 
     const crosshair = {
-      DEFAULT: cs[0][0],
-      BLUE: cs[0][1],
-      RED: cs[0][2]
+      DEFAULT: cs[0][0]
     }
 
     const goblin = {
@@ -112,6 +115,10 @@ export const loadSprites = () =>
       }
     }
 
+    const items = {
+      SWORD: is[0][0]
+    }
+
     const player = {
       STANDING: ps[0][0],
       WALK_DOWN: {
@@ -149,6 +156,7 @@ export const loadSprites = () =>
     sprites.addSet('crosshair', crosshair)
     sprites.addSet('goblin', goblin)
     sprites.addSet('golem', golem)
+    sprites.addSet('items', items)
     sprites.addSet('player', player)
     sprites.addSet('walls', walls)
   })

@@ -3,6 +3,7 @@ import { World } from 'ecsy'
 import * as Systems from './Systems'
 import * as Components from './Components'
 
+import { loadSounds, sounds } from './sounds'
 import { loadSprites, sprites } from './sprites'
 
 const world = new World()
@@ -21,15 +22,16 @@ const run = () => {
   requestAnimationFrame(run)
 }
 
-loadSprites().then(() => {
+Promise.all([loadSprites(), loadSounds()]).then(() => {
   world
     .registerSystem(Systems.Controls)
     .registerSystem(Systems.Player)
-    .registerSystem(Systems.Network)
+    // .registerSystem(Systems.Network)
     .registerSystem(Systems.Crosshair)
     .registerSystem(Systems.Collision)
     .registerSystem(Systems.Movement)
     .registerSystem(Systems.Combat)
+    .registerSystem(Systems.Audio)
     .registerSystem(Systems.Renderer)
 
   world
@@ -47,6 +49,14 @@ loadSprites().then(() => {
     .addComponent(Components.Static, {
       sprite: sprites.getSet('player').STANDING
     })
+
+  world
+    .createEntity('sword')
+    // .addComponent(Components.Sound, { audio: sounds.get('knifeDraw') })
+    .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 14, h: 18 })
+    .addComponent(Components.Pickable)
+    .addComponent(Components.Position, { x: 100, y: 200 })
+    .addComponent(Components.Static, { sprite: sprites.getSet('items').SWORD })
 
   world
     .createEntity('enemy-1')

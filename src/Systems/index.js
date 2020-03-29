@@ -1,3 +1,4 @@
+export { default as Audio } from './Audio'
 export { default as Collision } from './Collision'
 export { default as Controls } from './Controls'
 export { default as Crosshair } from './Crosshair'

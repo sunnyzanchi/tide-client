@@ -12,9 +12,11 @@ import {
   Player as PlayerComponent,
   Position,
   Projectile,
+  Sound,
   Static,
   Velocity,
 } from '../Components'
+import { sounds } from '../sounds'
 import { sprites } from '../sprites'
 
 const BULLET_ATTACK = { hp: 5 }
@@ -135,6 +137,7 @@ class Player extends System {
       this.world
         .createEntity()
         .addComponent(Attack, BULLET_ATTACK)
+        .addComponent(Sound, { audio: sounds.get('drawKnife') })
         .addComponent(BoundingBox, BULLET_BB)
         .addComponent(Networked)
         .addComponent(Projectile)
