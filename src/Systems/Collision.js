@@ -165,10 +165,12 @@ class Collision extends System {
 
     for (let other of this.queries.colliders.results) {
       // Can't collide against yourself
+      // Projectiles can't collide against other projectiles
       if (entity === other) continue
       if (
         (entity.hasComponent(Player) && other.hasComponent(Projectile)) ||
-        (entity.hasComponent(Projectile) && other.hasComponent(Player))
+        (entity.hasComponent(Projectile) && other.hasComponent(Player)) ||
+        (entity.hasComponent(Projectile) && other.hasComponent(Projectile))
       )
         continue
 

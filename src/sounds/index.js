@@ -1,4 +1,7 @@
 import drawKnifeOgg from '../assets/audio/drawKnife2.ogg'
+import impactEnemyOgg from '../assets/audio/impactMining_002.ogg'
+import impactWallOgg from '../assets/audio/footstep_carpet_000.ogg'
+import shotOgg from '../assets/audio/footstep_concrete_001.ogg'
 
 const ctx = new OfflineAudioContext({
   numberOfChannels: 2,
@@ -42,10 +45,14 @@ const loadSound = url =>
     .then(res => res.arrayBuffer())
     .then(buf => ctx.decodeAudioData(buf))
 
-
-const loadDrawKnife = () => loadSound(drawKnifeOgg)
+const urls = [drawKnifeOgg, impactEnemyOgg, impactWallOgg, shotOgg]
 
 export const loadSounds = () =>
-  Promise.all([loadDrawKnife()]).then(([drawKnife]) => {
-    sounds.add('drawKnife', drawKnife)
-  })
+  Promise.all(urls.map(loadSound)).then(
+    ([drawKnife, impactEnemy, impactWall, shot]) => {
+      sounds.add('drawKnife', drawKnife)
+      sounds.add('impactEnemy', impactEnemy)
+      sounds.add('impactWall', impactWall)
+      sounds.add('shot', shot)
+    }
+  )

@@ -21,7 +21,8 @@ import { sprites } from '../sprites'
 
 const BULLET_ATTACK = { hp: 5 }
 const BULLET_BB = { x: 0, y: 0, w: 8, h: 8 }
-const SPEED = 80
+const PROJECTILE_SPEED = 200
+const SPEED = 100
 
 class Player extends System {
   static queries = {
@@ -34,7 +35,8 @@ class Player extends System {
   bulletLimiter = 0
 
   init() {
-    // Have to do this in init since sprites are loaded async
+    // Have to do this in init since sprites/sounds are loaded async
+    this.BULLET_SOUND = { sound: sounds.get('shot') }
     this.BULLET_SPRITE = { sprite: sprites.getSet('bullet').DEFAULT }
   }
 
@@ -130,14 +132,14 @@ class Player extends System {
     if (mouse.LMB && this.bulletLimiter === 0) {
       const vel = new Vector(mouse.x - pos.x, mouse.y - pos.y)
         .normalize()
-        .multiplyScalar(128)
+        .multiplyScalar(PROJECTILE_SPEED)
         .toObject()
 
-      // Create bullet
+      // Create projectile
       this.world
-        .createEntity()
+        .createEntity(`bullet-${Math.random()}`)
         .addComponent(Attack, BULLET_ATTACK)
-        .addComponent(Sound, { audio: sounds.get('drawKnife') })
+        .addComponent(Sound, this.BULLET_SOUND)
         .addComponent(BoundingBox, BULLET_BB)
         .addComponent(Networked)
         .addComponent(Projectile)

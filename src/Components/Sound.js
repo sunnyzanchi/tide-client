@@ -1,11 +1,11 @@
 import { Component } from 'ecsy'
 
 class Sound extends Component {
-  audio = null
+  sound = null
   loop = false
 
   reset() {
-    this.audio = null
+    this.sound = null
     this.loop = false
   }
 }

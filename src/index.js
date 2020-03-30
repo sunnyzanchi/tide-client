@@ -52,15 +52,15 @@ Promise.all([loadSprites(), loadSounds()]).then(() => {
 
   world
     .createEntity('sword')
-    // .addComponent(Components.Sound, { audio: sounds.get('knifeDraw') })
     .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 14, h: 18 })
-    .addComponent(Components.Pickable)
+    .addComponent(Components.Pickable, { pickupSound: sounds.get('knifeDraw') })
     .addComponent(Components.Position, { x: 100, y: 200 })
     .addComponent(Components.Static, { sprite: sprites.getSet('items').SWORD })
 
   world
     .createEntity('enemy-1')
     .addComponent(Components.BoundingBox, { x: 10, y: 10, w: 45, h: 48 })
+    .addComponent(Components.Enemy)
     .addComponent(Components.Health, { max: 100, value: 50 })
     .addComponent(Components.Mass, { value: 100 })
     .addComponent(Components.Position, { x: 65, y: 45 })

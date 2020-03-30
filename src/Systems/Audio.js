@@ -9,15 +9,20 @@ class Audio extends System {
     audio: {
       components: [Sound],
       listen: {
-        added: true
+        added: true,
+        changed: true
       }
     }
   }
 
   playAudio(entity) {
-    const sound = entity.getComponent(Sound)
+    // May need to restructure some stuff - 
+    // in the Combat system, the projectile is removed when a collision is detected
+    // But, the projectile could potentially be created and deleted in the same tick
+    // For now, I'm trying to get the Sound component falling back to it if it's removed
+    const sound = entity.getComponent(Sound) || entity.getRemovedComponent(Sound)
     const source = ctx.createBufferSource()
-    source.buffer = sound.audio
+    source.buffer = sound.sound
 
     source.connect(ctx.destination)
     source.start(0)
@@ -25,6 +30,9 @@ class Audio extends System {
 
   execute() {
     for (const entity of this.queries.audio.added) {
+      this.playAudio(entity)
+    }
+    for (const entity of this.queries.audio.changed) {
       this.playAudio(entity)
     }
   }
