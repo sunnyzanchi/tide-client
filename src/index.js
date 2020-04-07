@@ -5,6 +5,29 @@ import * as Components from './Components'
 
 import { loadSounds, sounds } from './sounds'
 import { loadSprites, sprites } from './sprites'
+import { gridToTiles } from './gridToTiles'
+
+const TILE_SIZE = 32
+const grid = [
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+]
+
+const tileNames = gridToTiles(grid)
 
 const world = new World()
 
@@ -78,41 +101,26 @@ Promise.all([loadSprites(), loadSounds()]).then(() => {
       sprite: sprites.getSet('crosshair').DEFAULT
     })
 
-  for (let i = 1; i < 20; i++) {
-    world
-      .createEntity(`wall-${i}`)
-      .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 32, h: 16 })
-      .addComponent(Components.Mass, { value: 11 })
-      .addComponent(Components.Position, { x: i * 32, y: 0 })
+  for (let row = 0; row < tileNames.length; row++) {
+    for (let col = 0; col < tileNames[row].length; col++) {
+      const tileName = tileNames[row][col]
+
+      // TODO: Add fill tiles
+      if (tileName === 'EMPTY' || tileName === 'FILL') {
+        continue
+      }
+
+      world
+      .createEntity(`${tileName}-[${row}][${col}]`)
+      .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 32, h: 32 })
+      .addComponent(Components.Position, { x: col * TILE_SIZE, y: row * TILE_SIZE })
       .addComponent(Components.Static, {
-        sprite: sprites.getSet('walls').TOP1,
+        sprite: sprites.getSet('walls')[tileName],
         w: 32,
         h: 32
       })
+    }
   }
-  world
-    .createEntity('wall-tl')
-    .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 32, h: 16 })
-    .addComponent(Components.Mass, { value: 11 })
-    .addComponent(Components.Position, { x: 0, y: 0 })
-    .addComponent(Components.Static, {
-      sprite: sprites.getSet('walls').TOP_LEFT,
-      w: 32,
-      h: 32
-    })
-
-  for (let i = 1; i < 20; i++) {
-    world
-      .createEntity(`lwall-${i}`)
-      .addComponent(Components.BoundingBox, { x: 0, y: 0, w: 10, h: 32 })
-      .addComponent(Components.Mass, { value: 11 })
-      .addComponent(Components.Position, { x: 0, y: i * 32 })
-      .addComponent(Components.Static, {
-        sprite: sprites.getSet('walls').LEFT,
-        w: 32,
-        h: 32
-      })
-  }
-
+  
   run()
 })
