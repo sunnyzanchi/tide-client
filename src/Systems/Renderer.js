@@ -3,6 +3,8 @@ import {
   Animated,
   BoundingBox,
   Colliding,
+  Damage,
+  Enemy,
   Health,
   Movable,
   Position,
@@ -41,8 +43,16 @@ class Renderer extends System {
     },
     health: {
       components: [Health]
+    },
+    gettingDamaged: {
+      components: [Damage, Enemy],
+      listen: {
+        removed: true
+      }
     }
   }
+
+  damageFlashes = new Set()
 
   renderAnimated(entity, dt) {
     const { x, y } = entity.getComponent(Position)
@@ -123,8 +133,21 @@ class Renderer extends System {
     ctx.fillRect(x, y - 10, width * perc, 3)
   }
 
+  renderDamageFlash(entity, frame) {
+    const {x, y} = entity.getComponent(Position)
+    const sprite = getCurrentSprite(entity)
+    const width = sprite.width
+    const height = sprite.height
+    const alpha = 1 / (frame + 1)
+
+    ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`
+    ctx.beginPath()
+    ctx.fillRect(x, y, width, height)
+  }
+
   execute(dt) {
     ctx.clearRect(0, 0, 600, 600)
+    ctx.globalCompositeOperation = 'source-over'
     for (const entity of this.queries.static.results) {
       this.renderStatic(entity)
     }
@@ -139,6 +162,21 @@ class Renderer extends System {
 
     for (const entity of this.queries.health.results) {
       this.renderHealthBar(entity)
+    }
+
+    ctx.globalCompositeOperation = 'source-atop'
+    for (const entity of this.queries.gettingDamaged.removed) {
+      this.damageFlashes.add({ entity, frame: 0 })
+    }
+
+    for (const item of this.damageFlashes) {
+      if (item.frame === 3) {
+        this.damageFlashes.delete(item)
+        return
+      }
+
+      this.renderDamageFlash(item.entity, item.frame)
+      item.frame += 1
     }
   }
 }
